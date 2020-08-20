@@ -1,30 +1,16 @@
 import sys
 
-evenNumbers = [element
-               for element in range (100)
-               if (element % 2 == 0)
-               ]
 
-evenNumbersGenerator = (element ** 2
-                        for element in range (100)
-                        if (element % 2 == 0)
+
+evenNumbersGenerator = (element
+                        for element in range(471)
+                        if (element % 7 == 0 and not element % 5 == 0)
+                            if(element > 99 and element < 471)
+
                         )
-
-
-
 
 for item in evenNumbersGenerator:
-    print (item)
-evenNumbersGenerator = (element ** 2
-                        for element in range (100)
-                        if (element % 2 == 0)
-                        )
-
-print(sum(evenNumbersGenerator))
+    print(item)
 
 
-print(sys.getsizeof(evenNumbersGenerator))
 
-print(evenNumbers)
-
-print(sys.getsizeof(evenNumbers))
