@@ -29,7 +29,7 @@ def finish_timer(start):
     stop = time.perf_counter()
     return stop-start
 
-def function_performence(func, arg):
+def function_performence(func, arg, how_many_time = 1):
     start = time.perf_counter()
     func(arg)
     stop = time.perf_counter()
@@ -42,3 +42,8 @@ print(function_performence(sumuj_do2, a))
 print(function_performence(sumuj_do3, a))
 print(function_performence(sumuj_do4, a))
 print(function_performence(sumuj_do5, a))
+
+def suma(*arg):
+    return sum(*arg)
+
+print(suma(count(2,4,2,4,5,10)))
