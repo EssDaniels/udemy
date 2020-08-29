@@ -1,21 +1,12 @@
 import random
 from collections import Counter
 
-
-
-
-
-
-
-
 def will_weapon_hit(weaponChanceToHitPercentage):
     isHitChance = random.uniform(0, 100)
     if (isHitChance < weaponChanceToHitPercentage):
         return "hit"
     else:
         return "not hit"
-
-
 
 
 x = 0
