@@ -1,9 +1,11 @@
+from datetime import datetime
 from math import ceil
-
 from openpyxl import load_workbook
-
+from reportlab.lib import colors
 from template import dataToTemplate
-from listaobecnoscipdf import genPinTable
+from tableWorkersInPdf import genPinTable
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate
 
 LIBRE_OFFICE = r"C:\Program Files\LibreOffice\program\soffice.exe"
 
@@ -136,7 +138,7 @@ class AttendanceList:
         else:
             print("błędnie podano nr zmiany")
 
-        return womenList, menList,  zmiana_w, zmiana_m
+        return womenList, menList, zmiana_w, zmiana_m
 
     @staticmethod
     def loadDateShort(file_workers_list, zmiana, month):
@@ -173,3 +175,73 @@ class AttendanceList:
             zmiana_m = 'IV'
 
         return womenList, menList, zmiana_w, zmiana_m
+
+    @staticmethod
+    def markDay(lenMonth, month):
+        mark_days_list = []
+        ts = []
+        for i in range(1, lenMonth + 1):
+            x = datetime(2020, month, i)
+            day = x.strftime("%A")
+            if 'Saturday' == day or 'Sunday' == day:
+                ts = ('BACKGROUND', (0, i - 1), (-1, i - 1), colors.darkgrey)
+                mark_days_list.append(ts)
+
+        return mark_days_list
+
+
+
+    @staticmethod
+    def generatorList(listPerson, change, otherParm):
+
+        for t in range(1, ceil(len(listPerson) / 3) + 1):
+
+            try:
+
+                List_person = genPinTable(listPerson[0], listPerson[1], listPerson[2], change, otherParm[1], t,
+                                      otherParm[2],
+                                      otherParm[3])
+                fileName = 'listaobecnosci' + str(otherParm[0]) + str(t) + '.pdf'
+                pdf = SimpleDocTemplate(fileName, pagesize=letter, bottomMargin=0, topMargin=5, rightMargin=0,
+                                        leftMargin=0)
+
+                elems = []
+                elems.append(List_person)
+                pdf.build(elems)
+            except IndexError:
+                if len(listPerson) == 1:
+                    listPerson.append("")
+                    listPerson.append("")
+                    List_person = genPinTable(listPerson[0], listPerson[1], listPerson[2], change, otherParm[1], t,
+                                              otherParm[2],
+                                              otherParm[3])
+                    fileName = 'listaobecnosci' + str(otherParm[0]) + str(t) + '.pdf'
+                    pdf = SimpleDocTemplate(fileName, pagesize=letter, bottomMargin=0, topMargin=5, rightMargin=0,
+                                            leftMargin=0)
+
+                    elems = []
+                    elems.append(List_person)
+                    pdf.build(elems)
+                    listPerson.clear()
+
+                    continue
+                else:
+                    listPerson.append("")
+                    List_person = genPinTable(listPerson[0], listPerson[1], listPerson[2], change, otherParm[1], t,
+                                              otherParm[2],
+                                              otherParm[3])
+                    fileName = 'listaobecnosci' + str(otherParm[0]) + str(t) + '.pdf'
+                    pdf = SimpleDocTemplate(fileName, pagesize=letter, bottomMargin=0, topMargin=5, rightMargin=0,
+                                            leftMargin=0)
+
+                    elems = []
+                    elems.append(List_person)
+                    pdf.build(elems)
+                    listPerson.clear()
+                    continue
+
+            for _ in range(3):
+                del listPerson[0]
+        return 0
+
+
